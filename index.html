@@ -1,595 +1,582 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>My Bookmark Board</title>
-  <style>
-    :root {
-      --bg: #f4f5f7;
-      --card-bg: #ffffff;
-      --border: #d0d4dc;
-      --accent: #2c7be5;
-      --text-main: #222;
-      --text-muted: #666;
-      --topbar-bg: #ffffff;
-      --shadow: 0 1px 3px rgba(0,0,0,0.12);
-    }
-
-    * {
-      box-sizing: border-box;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text-main);
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 16px;
-      background: var(--topbar-bg);
-      border-bottom: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .topbar-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .app-title {
-      font-weight: 600;
-      font-size: 18px;
-    }
-
-    .topbar-buttons {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .btn {
-      padding: 6px 10px;
-      border-radius: 4px;
-      border: 1px solid var(--border);
-      background: #fff;
-      font-size: 13px;
-      cursor: pointer;
-    }
-
-    .btn-primary {
-      border-color: var(--accent);
-      background: var(--accent);
-      color: #fff;
-    }
-
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .search-input {
-      padding: 6px 10px;
-      border-radius: 4px;
-      border: 1px solid var(--border);
-      font-size: 13px;
-      min-width: 220px;
-    }
-
-    .csv-input {
-      font-size: 12px;
-    }
-
-    .board {
-      padding: 16px;
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-    }
-
-    .group-column {
-      min-width: 260px;
-      max-width: 280px;
-      background: var(--card-bg);
-      border-radius: 6px;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .group-column.drag-over {
-      outline: 2px dashed var(--accent);
-    }
-
-    .group-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 4px;
-    }
-
-    .group-title {
-      font-weight: 600;
-      font-size: 14px;
-    }
-
-    .group-count {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .link-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .link-item {
-      margin-bottom: 6px;
-      display: flex;
-      align-items: flex-start;
-      gap: 6px;
-    }
-
-    .link-icon {
-      width: 16px;
-      height: 16px;
-      border-radius: 3px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      color: #fff;
-      flex-shrink: 0;
-    }
-
-    .link-content {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .link-item a {
-      text-decoration: none;
-      font-size: 13px;
-      color: var(--accent);
-    }
-
-    .link-item a:hover {
-      text-decoration: underline;
-    }
-
-    .link-note {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    @media (max-width: 768px) {
-      .board {
-        padding: 8px;
-      }
-      .group-column {
-        min-width: 220px;
-      }
-    }
-
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.35);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 20;
-    }
-
-    .modal {
-      background: #fff;
-      border-radius: 6px;
-      padding: 16px;
-      width: 320px;
-      box-shadow: var(--shadow);
-    }
-
-    .modal h2 {
-      margin-top: 0;
-      font-size: 16px;
-    }
-
-    .modal label {
-      font-size: 13px;
-      display: block;
-      margin-bottom: 8px;
-    }
-
-    .modal input {
-      width: 100%;
-      margin-top: 4px;
-      padding: 4px 6px;
-      font-size: 13px;
-    }
-
-    .modal-actions {
-      margin-top: 12px;
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Bryant’s Bookmark Manager</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  body {
+    font-family: "Segoe UI", Roboto, sans-serif;
+    background:#f5f7fa;
+    margin:0;
+    padding:20px;
+    color:#222;
+  }
+  h1 {
+    text-align:center;
+    font-size:26px;
+    margin-bottom:20px;
+  }
+  #searchBox {
+    display:block;
+    margin:0 auto 20px auto;
+    max-width:500px;
+    width:100%;
+    padding:10px 14px;
+    border-radius:999px;
+    border:1px solid #ccc;
+    font-size:15px;
+  }
+  #importArea, #tabsArea, #exportArea {
+    text-align:center;
+    margin-bottom:20px;
+  }
+  #importArea input {
+    margin:6px;
+  }
+  .section {
+    background:#ffffff;
+    border-radius:10px;
+    padding:14px 16px;
+    margin:10px 0;
+    box-shadow:0 2px 6px rgba(0,0,0,0.08);
+  }
+  .section-header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    cursor:pointer;
+    font-weight:600;
+    font-size:17px;
+  }
+  .section-header .arrow {
+    transition:transform 0.2s;
+    font-size:14px;
+  }
+  .section.open .arrow {
+    transform:rotate(90deg);
+  }
+  .section-content {
+    display:none;
+    margin-top:10px;
+  }
+  .section-content ul {
+    list-style:none;
+    padding:0;
+    margin:0;
+  }
+  .section-content li {
+    margin:6px 0;
+    font-size:14px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .section-content a {
+    text-decoration:none;
+    color:#0056b3;
+  }
+  .section-content a:hover {
+    text-decoration:underline;
+  }
+  .icon {
+    margin-right:6px;
+    color:#888;
+  }
+  .btn {
+    background:#eaeaea;
+    border:none;
+    padding:6px 10px;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:12px;
+    margin:4px;
+  }
+  .btn:hover {
+    background:#dcdcdc;
+  }
+  #addSectionBtn {
+    display:block;
+    margin:20px auto;
+    padding:10px 16px;
+    font-size:14px;
+    border-radius:8px;
+    border:none;
+    background:#0056b3;
+    color:white;
+    cursor:pointer;
+  }
+  #addSectionBtn:hover {
+    background:#0078d4;
+  }
+</style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="topbar-left">
-      <div class="app-title">My Bookmark Board</div>
-      <div class="topbar-buttons">
-        <button class="btn btn-primary" id="btnAddGroup">Add Group</button>
-        <button class="btn" id="btnEditView">Edit View</button>
-        <button class="btn" id="btnActions">Actions</button>
-        <label class="csv-input">
-          Import CSV
-          <input type="file" id="csvFile" accept=".csv" />
-        </label>
+
+<h1>🌐 Bryant’s Bookmark Manager</h1>
+
+<input id="searchBox" type="text" placeholder="Search links…" onkeyup="filterLinks()">
+
+<div id="importArea">
+  <input id="fileInput" type="file" accept="*/*">
+  <button class="btn" onclick="importAnyFile()">Import File (HTML / JSON / CSV / TXT)</button>
+</div>
+
+<div id="tabsArea">
+  <button class="btn" onclick="importOpenTabsAsSection()">Import Open Tabs as New Section</button>
+  <button class="btn" onclick="importOpenTabsMerge()">Merge Open Tabs into Existing Section</button>
+</div>
+
+<div id="exportArea">
+  <button class="btn" onclick="exportOpenTabsCSV()">Export Open Tabs to CSV</button>
+  <button class="btn" onclick="exportOpenTabsHTML()">Export Open Tabs to HTML</button>
+</div>
+
+<button id="addSectionBtn" onclick="addSection()">➕ Add New Section</button>
+
+<div id="sectionsContainer"></div>
+
+<script>
+/* ---------------------------------------------------------
+   CLEAN EDGE BROWSER TAB METADATA
+   --------------------------------------------------------- */
+const edge_all_open_tabs = [
+  {
+    pageTitle: "Bryant’s Bookmark Manager",
+    pageUrl: "",
+    tabId: 548149674,
+    isCurrent: true
+  }
+  // add more tabs here if you want
+];
+
+/* ---------------------------------------------------------
+   DATA LOAD / SAVE
+--------------------------------------------------------- */
+let data = JSON.parse(localStorage.getItem("bkd_links")) || {
+  sections: []
+};
+
+function save() {
+  localStorage.setItem("bkd_links", JSON.stringify(data));
+}
+
+/* ---------------------------------------------------------
+   RENDER SECTIONS
+--------------------------------------------------------- */
+function render() {
+  const container = document.getElementById("sectionsContainer");
+  container.innerHTML = "";
+
+  data.sections.forEach((section, index) => {
+    const div = document.createElement("div");
+    div.className = "section";
+
+    div.innerHTML = `
+      <div class="section-header" onclick="toggleSection(this)">
+        <span>${section.title}</span>
+        <span>
+          <button class="btn" onclick="event.stopPropagation(); deleteSection(${index})">🗑 Delete</button>
+          <span class="arrow">▶</span>
+        </span>
       </div>
-    </div>
-    <div class="topbar-right">
-      <input
-        type="search"
-        id="searchInput"
-        class="search-input"
-        placeholder="Search bookmarks..."
-      />
-    </div>
-  </header>
-
-  <main class="board" id="board"></main>
-
-  <!-- Modal: Add group -->
-  <div class="modal-backdrop" id="modalBackdrop">
-    <div class="modal">
-      <h2>Add Group</h2>
-      <label>
-        Group name
-        <input type="text" id="newGroupName" />
-      </label>
-      <div class="modal-actions">
-        <button class="btn" id="btnCancelModal">Cancel</button>
-        <button class="btn btn-primary" id="btnSaveGroup">Save</button>
+      <div class="section-content">
+        <ul>
+          ${section.links.map((link, i) => `
+            <li>
+              <span><i class="fa-solid fa-link icon"></i>
+              <a href="${link.url}" target="_blank">${link.text}</a></span>
+              <button class="btn" onclick="deleteLink(${index}, ${i})">Delete</button>
+            </li>
+          `).join("")}
+        </ul>
+        <button class="btn" onclick="addLink(${index})">➕ Add Link</button>
       </div>
-    </div>
-  </div>
+    `;
 
-  <!-- Modal: Add link -->
-  <div class="modal-backdrop" id="linkModalBackdrop">
-    <div class="modal">
-      <h2>Add Link</h2>
-      <label>
-        Label
-        <input type="text" id="linkLabel" />
-      </label>
-      <label>
-        URL
-        <input type="text" id="linkUrl" />
-      </label>
-      <label>
-        Note (optional)
-        <input type="text" id="linkNote" />
-      </label>
-      <label>
-        Color (optional)
-        <input type="text" id="linkColor" placeholder="#2c7be5" />
-      </label>
-      <label>
-        Icon text fallback (optional)
-        <input type="text" id="linkIconText" placeholder="M" />
-      </label>
-      <div class="modal-actions">
-        <button class="btn" id="btnCancelLinkModal">Cancel</button>
-        <button class="btn btn-primary" id="btnSaveLink">Save</button>
-      </div>
-    </div>
-  </div>
+    container.appendChild(div);
+  });
+}
 
-  <script>
-    const STORAGE_KEY = "bookmarkBoardGroups";
+render();
 
-    const defaultData = [
-      {
-        title: "Property Research Step 1",
-        links: [
-          { label: "TMLS Dashboard", url: "https://example.com/tmls", note: "MLS access", color: "#2c7be5", iconText: "T" },
-          { label: "GIS / County Maps", url: "https://example.com/gis", note: "Parcel boundaries", color: "#28a745", iconText: "G" }
-        ]
-      },
-      {
-        title: "Marketing",
-        links: [
-          { label: "YouTube Subtitle Downloader", url: "https://example.com/youtube-subtitles", note: "Pull captions", color: "#ff9800", iconText: "Y" },
-          { label: "Canva", url: "https://example.com/canva", note: "Design templates", color: "#673ab7", iconText: "C" }
-        ]
-      }
-    ];
+/* ---------------------------------------------------------
+   TOGGLE SECTION
+--------------------------------------------------------- */
+function toggleSection(header) {
+  const section = header.parentElement;
+  const content = section.querySelector(".section-content");
+  const isOpen = section.classList.contains("open");
 
-    function loadGroups() {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return defaultData;
-      try {
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed)) return parsed;
-        return defaultData;
-      } catch {
-        return defaultData;
-      }
-    }
+  document.querySelectorAll(".section-content").forEach(c => c.style.display = "none");
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("open"));
 
-    function saveGroups() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(groups));
-    }
+  if (!isOpen) {
+    content.style.display = "block";
+    section.classList.add("open");
+  }
+}
 
-    let groups = loadGroups();
-    let dragSourceIndex = null;
-    let activeGroupForNewLink = null;
+/* ---------------------------------------------------------
+   ADD / DELETE SECTION
+--------------------------------------------------------- */
+function addSection() {
+  const title = prompt("Section name:");
+  if (!title) return;
 
-    const boardEl = document.getElementById("board");
-    const searchInput = document.getElementById("searchInput");
+  data.sections.push({ title, links: [] });
+  save();
+  render();
+}
 
-    function getFavicon(url) {
-      try {
-        const u = new URL(url);
-        return `https://www.google.com/s2/favicons?domain=${u.hostname}&sz=32`;
-      } catch {
-        return "";
-      }
-    }
+function deleteSection(index) {
+  if (!confirm("Delete this entire section?")) return;
+  data.sections.splice(index, 1);
+  save();
+  render();
+}
 
-    function renderBoard(filterText = "") {
-      boardEl.innerHTML = "";
-      const normalizedFilter = filterText.trim().toLowerCase();
+/* ---------------------------------------------------------
+   ADD / DELETE LINK
+--------------------------------------------------------- */
+function addLink(sectionIndex) {
+  const text = prompt("Link name:");
+  if (!text) return;
 
-      groups.forEach((group, index) => {
-        const filteredLinks = group.links.filter(link => {
-          if (!normalizedFilter) return true;
-          return (
-            link.label.toLowerCase().includes(normalizedFilter) ||
-            link.url.toLowerCase().includes(normalizedFilter) ||
-            (link.note || "").toLowerCase().includes(normalizedFilter)
-          );
+  const url = prompt("Link URL:");
+  if (!url) return;
+
+  data.sections[sectionIndex].links.push({ text, url });
+  save();
+  render();
+}
+
+function deleteLink(sectionIndex, linkIndex) {
+  data.sections[sectionIndex].links.splice(linkIndex, 1);
+  save();
+  render();
+}
+
+/* ---------------------------------------------------------
+   SEARCH FILTER
+--------------------------------------------------------- */
+function filterLinks() {
+  const q = document.getElementById("searchBox").value.toLowerCase();
+  const sections = document.querySelectorAll(".section");
+
+  sections.forEach(section => {
+    const links = section.querySelectorAll("a");
+    let match = false;
+
+    links.forEach(a => {
+      if (a.textContent.toLowerCase().includes(q)) match = true;
+    });
+
+    section.style.display = match || q === "" ? "block" : "none";
+  });
+}
+
+/* ---------------------------------------------------------
+   UNIVERSAL IMPORT ENGINE
+   - Netscape HTML (Bookmarkee, Chrome, Firefox, Edge)
+   - JSON
+   - Proprietary Bookmarkee HTML
+   - Plain text (URLs)
+   - CSV (URL lists)
+--------------------------------------------------------- */
+async function importAnyFile() {
+  const input = document.getElementById("fileInput");
+  const file = input.files && input.files[0];
+
+  if (!file) {
+    alert("No file selected.");
+    return;
+  }
+
+  let text = await file.text();
+
+  // 1. REMOVE Edge-injected WebsiteContent wrappers
+  let cleaned = text.replace(/<WebsiteContent_[^>]+>/g, "")
+                    .replace(/<\/WebsiteContent_[^>]+>/g, "");
+
+  // 2. REMOVE invisible Unicode characters
+  cleaned = cleaned.replace(/[\u0000-\u001F\u007F-\u009F]/g, "");
+
+  // 3. REMOVE escaped unicode sequences like \u0026
+  cleaned = cleaned.replace(/\\u[\dA-F]{4}/gi, "");
+
+  // 4. UNIVERSAL PARSER: detect format
+  if (cleaned.includes("<H3") && cleaned.includes("<A ")) {
+    parseNetscapeHTML(cleaned);
+  } else if (cleaned.trim().startsWith("{")) {
+    parseJSONBookmarks(cleaned);
+  } else if (cleaned.includes("<div") && cleaned.includes("folder")) {
+    parseBookmarkeeHTML(cleaned);
+  } else if (cleaned.includes(",") && cleaned.split("\n")[0].includes(",")) {
+    parseCSVText(cleaned);
+  } else {
+    parsePlainText(cleaned);
+  }
+
+  save();
+  render();
+  alert("Import complete!");
+}
+
+/* ---------------------------------------------------------
+   Netscape HTML parser (Bookmarkee, Chrome, Firefox, Edge)
+--------------------------------------------------------- */
+function parseNetscapeHTML(html) {
+  const sectionRegex = /<H3[^>]*>(.*?)<\/H3>/gi;
+  const linkRegex = /<A [^>]*HREF="([^"]+)"[^>]*>(.*?)<\/A>/gi;
+
+  let match;
+  while ((match = sectionRegex.exec(html)) !== null) {
+    const title = match[1].trim();
+
+    // Find the DL block after this H3
+    const start = match.index + match[0].length;
+    const dlBlock = html.slice(start).match(/<DL[^>]*>([\s\S]*?)<\/DL>/i);
+
+    const links = [];
+    if (dlBlock) {
+      let linkMatch;
+      while ((linkMatch = linkRegex.exec(dlBlock[1])) !== null) {
+        links.push({
+          text: linkMatch[2].trim(),
+          url: linkMatch[1].trim()
         });
+      }
+    }
 
-        if (!filteredLinks.length && normalizedFilter) return;
+    data.sections.push({ title, links });
+  }
+}
 
-        const col = document.createElement("section");
-        col.className = "group-column";
-        col.setAttribute("draggable", "true");
-        col.dataset.index = index;
+/* ---------------------------------------------------------
+   Bookmarkee JSON parser
+--------------------------------------------------------- */
+function parseJSONBookmarks(jsonText) {
+  let obj;
+  try {
+    obj = JSON.parse(jsonText);
+  } catch (e) {
+    alert("Invalid JSON file.");
+    return;
+  }
 
-        col.addEventListener("dragstart", handleDragStart);
-        col.addEventListener("dragover", handleDragOver);
-        col.addEventListener("dragleave", handleDragLeave);
-        col.addEventListener("drop", handleDrop);
-        col.addEventListener("dragend", handleDragEnd);
+  if (!obj.folders) return;
 
-        const header = document.createElement("div");
-        header.className = "group-header";
+  obj.folders.forEach(folder => {
+    const links = (folder.links || []).map(l => ({
+      text: l.title,
+      url: l.url
+    }));
 
-        const title = document.createElement("div");
-        title.className = "group-title";
-        title.textContent = group.title;
+    data.sections.push({
+      title: folder.name || "Untitled",
+      links
+    });
+  });
+}
 
-        const count = document.createElement("div");
-        count.className = "group-count";
-        count.textContent = `${filteredLinks.length} link${filteredLinks.length !== 1 ? "s" : ""}`;
+/* ---------------------------------------------------------
+   Proprietary Bookmarkee HTML parser
+--------------------------------------------------------- */
+function parseBookmarkeeHTML(html) {
+  const folderRegex = /<div[^>]*class="folder"[^>]*>([\s\S]*?)<\/div>/gi;
+  const titleRegex = /<div[^>]*class="title"[^>]*>(.*?)<\/div>/i;
+  const linkRegex = /<a[^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/gi;
 
-        header.appendChild(title);
-        header.appendChild(count);
+  let folderMatch;
+  while ((folderMatch = folderRegex.exec(html)) !== null) {
+    const block = folderMatch[1];
 
-        const list = document.createElement("ul");
-        list.className = "link-list";
+    const titleMatch = block.match(titleRegex);
+    const title = titleMatch ? titleMatch[1].trim() : "Untitled";
 
-        filteredLinks.forEach((link, linkIndex) => {
-          const li = document.createElement("li");
-          li.className = "link-item";
-
-          if (link.color) {
-            li.style.borderLeft = `3px solid ${link.color}`;
-            li.style.paddingLeft = "4px";
-          }
-
-          const iconImg = document.createElement("img");
-          iconImg.className = "link-icon";
-          iconImg.src = getFavicon(link.url);
-          iconImg.alt = "";
-          iconImg.style.width = "16px";
-          iconImg.style.height = "16px";
-          iconImg.style.borderRadius = "3px";
-
-          iconImg.onerror = () => {
-            iconImg.remove();
-            const fallback = document.createElement("div");
-            fallback.className = "link-icon";
-            fallback.textContent = (link.iconText || link.label[0] || "?").toUpperCase();
-            fallback.style.background = link.color || "#999";
-            li.prepend(fallback);
-          };
-
-          li.prepend(iconImg);
-
-          const content = document.createElement("div");
-          content.className = "link-content";
-
-          const a = document.createElement("a");
-          a.href = link.url;
-          a.target = "_blank";
-          a.rel = "noopener noreferrer";
-          a.textContent = link.label;
-
-          content.appendChild(a);
-
-          if (link.note) {
-            const note = document.createElement("div");
-            note.className = "link-note";
-            note.textContent = link.note;
-            content.appendChild(note);
-          }
-
-          li.appendChild(content);
-          list.appendChild(li);
-        });
-
-        const addLinkBtn = document.createElement("button");
-        addLinkBtn.className = "btn";
-        addLinkBtn.textContent = "+ Link";
-        addLinkBtn.style.marginTop = "6px";
-        addLinkBtn.addEventListener("click", () => openLinkModal(index));
-
-        col.appendChild(header);
-        col.appendChild(list);
-        col.appendChild(addLinkBtn);
-        boardEl.appendChild(col);
+    const links = [];
+    let linkMatch;
+    while ((linkMatch = linkRegex.exec(block)) !== null) {
+      links.push({
+        text: linkMatch[2].trim(),
+        url: linkMatch[1].trim()
       });
     }
 
-    function handleDragStart(e) {
-      dragSourceIndex = Number(e.currentTarget.dataset.index);
-      e.dataTransfer.effectAllowed = "move";
+    data.sections.push({ title, links });
+  }
+}
+
+/* ---------------------------------------------------------
+   Plain text parser (URLs only)
+--------------------------------------------------------- */
+function parsePlainText(text) {
+  const lines = text.split("\n");
+
+  const links = lines
+    .filter(line => line.includes("http"))
+    .map(line => ({
+      text: line.trim(),
+      url: line.trim()
+    }));
+
+  if (links.length === 0) {
+    alert("No URLs found in plain text.");
+    return;
+  }
+
+  data.sections.push({
+    title: "Imported Text",
+    links
+  });
+}
+
+/* ---------------------------------------------------------
+   CSV parser (two columns: name,url)
+--------------------------------------------------------- */
+function parseCSVText(text) {
+  const rows = text.split("\n").map(r => r.split(","));
+  const sectionName = prompt("Name for imported CSV section:", "Imported CSV");
+  if (!sectionName) return;
+
+  const newSection = { title: sectionName, links: [] };
+
+  rows.forEach(row => {
+    if (row.length >= 2) {
+      newSection.links.push({ text: row[0].trim(), url: row[1].trim() });
     }
+  });
 
-    function handleDragOver(e) {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = "move";
-      e.currentTarget.classList.add("drag-over");
-    }
+  data.sections.push(newSection);
+}
 
-    function handleDragLeave(e) {
-      e.currentTarget.classList.remove("drag-over");
-    }
+/* ---------------------------------------------------------
+   IMPORT OPEN TABS AS NEW SECTION
+--------------------------------------------------------- */
+function importOpenTabsAsSection() {
+  const sectionName = prompt("Name for the new 'Open Tabs' section:", "Open Tabs");
+  if (!sectionName) return;
 
-    function handleDrop(e) {
-      e.preventDefault();
-      const targetIndex = Number(e.currentTarget.dataset.index);
-      e.currentTarget.classList.remove("drag-over");
-      if (dragSourceIndex === null || dragSourceIndex === targetIndex) return;
+  const links = edge_all_open_tabs
+    .filter(t => t.pageUrl && t.pageUrl.trim() !== "")
+    .map(t => ({
+      text: t.isCurrent ? t.pageTitle + " (Current Tab)" : t.pageTitle,
+      url: t.pageUrl
+    }));
 
-      const [moved] = groups.splice(dragSourceIndex, 1);
-      groups.splice(targetIndex, 0, moved);
-      dragSourceIndex = null;
-      saveGroups();
-      renderBoard(searchInput.value);
-    }
+  if (links.length === 0) {
+    alert("No valid tabs with URLs to import.");
+    return;
+  }
 
-    function handleDragEnd(e) {
-      e.currentTarget.classList.remove("drag-over");
-      dragSourceIndex = null;
-    }
+  data.sections.push({ title: sectionName, links });
+  save();
+  render();
+}
 
-    renderBoard();
+/* ---------------------------------------------------------
+   MERGE OPEN TABS INTO EXISTING SECTION
+--------------------------------------------------------- */
+function importOpenTabsMerge() {
+  if (data.sections.length === 0) {
+    alert("No sections exist yet. Create a section first.");
+    return;
+  }
 
-    searchInput.addEventListener("input", (e) => {
-      renderBoard(e.target.value);
-    });
+  const names = data.sections.map((s, i) => `${i}: ${s.title}`).join("\n");
+  const choice = prompt("Choose section index to merge open tabs into:\n" + names);
+  if (choice === null) return;
 
-    const modalBackdrop = document.getElementById("modalBackdrop");
-    const btnAddGroup = document.getElementById("btnAddGroup");
-    const btnCancelModal = document.getElementById("btnCancelModal");
-    const btnSaveGroup = document.getElementById("btnSaveGroup");
-    const newGroupNameInput = document.getElementById("newGroupName");
+  const idx = parseInt(choice, 10);
+  if (isNaN(idx) || idx < 0 || idx >= data.sections.length) {
+    alert("Invalid section index.");
+    return;
+  }
 
-    function openGroupModal() {
-      modalBackdrop.style.display = "flex";
-      newGroupNameInput.value = "";
-      newGroupNameInput.focus();
-    }
+  const links = edge_all_open_tabs
+    .filter(t => t.pageUrl && t.pageUrl.trim() !== "")
+    .map(t => ({
+      text: t.isCurrent ? t.pageTitle + " (Current Tab)" : t.pageTitle,
+      url: t.pageUrl
+    }));
 
-    function closeGroupModal() {
-      modalBackdrop.style.display = "none";
-    }
+  if (links.length === 0) {
+    alert("No valid tabs with URLs to merge.");
+    return;
+  }
 
-    btnAddGroup.addEventListener("click", openGroupModal);
-    btnCancelModal.addEventListener("click", closeGroupModal);
+  data.sections[idx].links = data.sections[idx].links.concat(links);
+  save();
+  render();
+}
 
-    btnSaveGroup.addEventListener("click", () => {
-      const name = newGroupNameInput.value.trim();
-      if (!name) return;
-      groups.push({ title: name, links: [] });
-      saveGroups();
-      renderBoard(searchInput.value);
-      closeGroupModal();
-    });
+/* ---------------------------------------------------------
+   EXPORT OPEN TABS TO CSV
+--------------------------------------------------------- */
+function exportOpenTabsCSV() {
+  const rows = edge_all_open_tabs
+    .filter(t => t.pageUrl && t.pageUrl.trim() !== "")
+    .map(t => `"${t.pageTitle.replace(/"/g, '""')}","${t.pageUrl.replace(/"/g, '""')}"`);
 
-    const linkModalBackdrop = document.getElementById("linkModalBackdrop");
-    const linkLabelInput = document.getElementById("linkLabel");
-    const linkUrlInput = document.getElementById("linkUrl");
-    const linkNoteInput = document.getElementById("linkNote");
-    const linkColorInput = document.getElementById("linkColor");
-    const linkIconTextInput = document.getElementById("linkIconText");
-    const btnCancelLinkModal = document.getElementById("btnCancelLinkModal");
-    const btnSaveLink = document.getElementById("btnSaveLink");
+  if (rows.length === 0) {
+    alert("No tabs with URLs to export.");
+    return;
+  }
 
-    function openLinkModal(groupIndex) {
-      activeGroupForNewLink = groupIndex;
-      linkModalBackdrop.style.display = "flex";
-      linkLabelInput.value = "";
-      linkUrlInput.value = "";
-      linkNoteInput.value = "";
-      linkColorInput.value = "";
-      linkIconTextInput.value = "";
-      linkLabelInput.focus();
-    }
+  const csvContent = rows.join("\n");
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
 
-    function closeLinkModal() {
-      linkModalBackdrop.style.display = "none";
-      activeGroupForNewLink = null;
-    }
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "open_tabs.csv";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
 
-    btnCancelLinkModal.addEventListener("click", closeLinkModal);
+/* ---------------------------------------------------------
+   EXPORT OPEN TABS TO HTML (Netscape Format)
+--------------------------------------------------------- */
+function exportOpenTabsHTML() {
+  const links = edge_all_open_tabs
+    .filter(t => t.pageUrl && t.pageUrl.trim() !== "");
 
-    btnSaveLink.addEventListener("click", () => {
-      if (activeGroupForNewLink === null) return;
-      const label = linkLabelInput.value.trim();
-      const url = linkUrlInput.value.trim();
-      const note = linkNoteInput.value.trim();
-      const color = linkColorInput.value.trim();
-      const iconText = linkIconTextInput.value.trim();
+  if (links.length === 0) {
+    alert("No tabs with URLs to export.");
+    return;
+  }
 
-      if (!label || !url) return;
+  let html = `<!DOCTYPE NETSCAPE-Bookmark-file-1>
+<TITLE>Open Tabs Export</TITLE>
+<H1>Bookmarks</H1>
+<DL><p>
+<DT><H3>Open Tabs</H3>
+<DL><p>
+`;
 
-      groups[activeGroupForNewLink].links.push({
-        label,
-        url,
-        note: note || "",
-        color: color || "",
-        iconText: iconText || ""
-      });
+  links.forEach(t => {
+    html += `<DT><A HREF="${t.pageUrl}">${t.pageTitle}</A>\n`;
+  });
 
-      saveGroups();
-      renderBoard(searchInput.value);
-      closeLinkModal();
-    });
+  html += `</DL><p>
+</DL><p>
+`;
 
-    document.getElementById("btnEditView").addEventListener("click", () => {
-      alert("Future: compact mode, hide notes, etc.");
-    });
+  const blob = new Blob([html], { type: "text/html;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
 
-    document.getElementById("btnActions").addEventListener("click", () => {
-      alert("Future: export to CSV, reset layout, etc.");
-    });
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "open_tabs_bookmarks.html";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+</script>
 
-    const csvFileInput = document.getElementById("csvFile");
-
-    csvFileInput.addEventListener("change", (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      const reader
+</body>
+</html>
